@@ -9,7 +9,7 @@ services:
       - TZ=Europe/Paris
     volumes:
       - ./config/sonarr:/config
-      - ./media/tv:/tv
+      - ./media/shows:/tv
       - ./torrent:/downloads
     ports:
       - 8989:8989
@@ -24,7 +24,7 @@ services:
       - TZ=Europe/Paris
     volumes:
       - ./config/radarr:/config
-      - ./media/movies:/movies
+      - ./media/films:/movies
       - ./torrent:/downloads
     ports:
       - 7878:7878
@@ -90,3 +90,30 @@ services:
         "--joal.ui.path.prefix=web",
         "--joal.ui.secret-token=secret",
       ]
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - ./config/prowlar:/config
+    ports:
+      - 9696:9696
+    restart: unless-stopped  
+  plex:
+    image: lscr.io/linuxserver/plex:latest
+    container_name: plex
+    network_mode: host
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - VERSION=docker
+      - PLEX_CLAIM= #optional
+    volumes:
+      - ./config/plex:/config
+      - ./media/shows:/tv
+      - ./media/films:/movies
+    restart: unless-stopped
