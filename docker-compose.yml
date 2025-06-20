@@ -1,42 +1,41 @@
-version: "3"
 services:
   sonarr:
-    image: linuxserver/sonarr
+    image: linuxserver/sonarr:latest
     container_name: sonarr
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/Paris
+      PUID: 1000
+      PGID: 1000
+      TZ: Europe/Paris
     volumes:
       - ./config/sonarr:/config
-      - ./media/shows:/tv
+      - ./media/tv:/tv
       - ./torrent:/downloads
     ports:
       - 8989:8989
     restart: unless-stopped
 
   radarr:
-    image: linuxserver/radarr
+    image: lscr.io/linuxserver/radarr:latest
     container_name: radarr
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/Paris
+      PUID: 1000
+      PGID: 1000
+      TZ: Europe/Paris
     volumes:
       - ./config/radarr:/config
-      - ./media/films:/movies
+      - ./media/movies:/movies
       - ./torrent:/downloads
     ports:
       - 7878:7878
     restart: unless-stopped
 
   deluge:
-    image: ghcr.io/linuxserver/deluge
+    image: lscr.io/linuxserver/deluge:latest
     container_name: deluge
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/Paris
+      PUID: 1000
+      PGID: 1000
+      TZ: Europe/Paris
     volumes:
       - ./config/deluge:/config
       - ./torrent:/downloads
@@ -48,12 +47,12 @@ services:
     restart: unless-stopped
 
   jackett:
-    image: linuxserver/jackett
+    image: linuxserver/jackett:latest
     container_name: jackett
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/Paris
+      PUID: 1000
+      PGID: 1000
+      TZ: Europe/Paris
     volumes:
       - ./config/jackett:/config
       - /etc/localtime:/etc/localtime:ro
@@ -62,58 +61,15 @@ services:
     restart: unless-stopped
 
   jellyfin:
-    image: jellyfin/jellyfin
+    image: jellyfin/jellyfin:latest
     container_name: jellyfin
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/Paris
+      PUID: 1000
+      PGID: 1000
+      TZ: Europe/Paris
     volumes:
       - ./config/jellyfin:/config
       - ./media:/media
     ports:
       - 8096:8096
-    restart: unless-stopped
-  joal:
-    image: anthonyraymond/joal
-    container_name: joal
-    restart: unless-stopped
-    volumes:
-      - ./config/joal:/data
-    ports:
-      - 8080:8080
-    command:
-      [
-        "--spring.main.web-environment=true",
-        "--joal-conf=/data",
-        "--server.port=8080",
-        "--joal.ui.path.prefix=web",
-        "--joal.ui.secret-token=secret",
-      ]
-  prowlarr:
-    image: lscr.io/linuxserver/prowlarr:latest
-    container_name: prowlarr
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Etc/UTC
-    volumes:
-      - ./config/prowlar:/config
-    ports:
-      - 9696:9696
-    restart: unless-stopped  
-  plex:
-    image: lscr.io/linuxserver/plex:latest
-    container_name: plex
-    network_mode: host
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Etc/UTC
-      - VERSION=docker
-      - PLEX_CLAIM= #optional
-    volumes:
-      - ./config/plex:/config
-      - ./media/shows:/tv
-      - ./media/films:/movies
     restart: unless-stopped
